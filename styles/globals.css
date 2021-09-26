@@ -1,16 +1,38 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: "Regular";
+  src: url("/fonts/Inter-roman.var.woff2?v=3.19") format("woff2");
 }
-
-a {
-  color: inherit;
-  text-decoration: none;
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: "Italic";
+  src: url("/fonts/Inter-italic.var.woff2?v=3.19") format("woff2");
 }
-
-* {
-  box-sizing: border-box;
+.root,
+:root {
+  --gray-50: #f8f8f9;
+  --gray-100: #f2f2f3;
+  --gray-200: #e4e5e7;
+  --gray-300: #d7d8db;
+  --gray-400: #cacace;
+  --gray-500: #bcbdc2;
+  --gray-600: #a2a3aa;
+  --gray-700: #878992;
+  --gray-800: #333438;
+  --gray-900: #050505;
+  --primary300: #9782ff;
+  --bg: var(--gray-900);
+  --offWhite: var(--gray-50);
+  --placeholder: var(--gray-600);
+  --line: var(--gray-800);
+  --deemphasised: var(--gray-500);
 }
