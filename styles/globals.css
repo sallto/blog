@@ -35,4 +35,8 @@
   --placeholder: var(--gray-600);
   --line: var(--gray-800);
   --deemphasised: var(--gray-500);
+  --txt: var(--gray-200);
+}
+html {
+  scroll-behavior: smooth;
 }

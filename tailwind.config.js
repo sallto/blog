@@ -15,6 +15,7 @@ module.exports = {
           placeholder: "var(--placeholder)",
           line: "var(--line)",
           deemphasised: "var(--deemphasised)",
+          txt: "var(--txt)",
         },
         grayscale: {
           DEFAULT: "#BCBDC2",
@@ -37,5 +38,5 @@ module.exports = {
       extend: {},
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
