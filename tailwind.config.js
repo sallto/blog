@@ -7,7 +7,8 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          300: "var(--primary300)",
+          300: "#9782ff",
+          200: "var(--primary200)",
         },
         secondary: {
           bg: "var(--bg)",
@@ -16,6 +17,7 @@ module.exports = {
           line: "var(--line)",
           deemphasised: "var(--deemphasised)",
           txt: "var(--txt)",
+          lightBg: "var(--light-bg)",
         },
         grayscale: {
           DEFAULT: "#BCBDC2",
