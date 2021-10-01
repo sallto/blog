@@ -1,9 +1,12 @@
 import Link from "next/link";
 import React from "react";
+import AnimatedArrow from "./AnimatedArrow";
 
 const StyledLink = ({ children, href }: StyledLinkProps) => (
   <Link href={href} passHref>
-    <a className="text-primary-300 text-base font-medium">{children} &rarr;</a>
+    <a className="text-primary-300 text-base font-medium group">
+      {children} <AnimatedArrow />
+    </a>
   </Link>
 );
 type StyledLinkProps = {
