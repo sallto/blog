@@ -26,7 +26,7 @@
   --gray-400: #cacace;
   --gray-500: #bcbdc2;
   --gray-600: #a2a3aa;
-  --gray-700: #878992;
+  --gray-700: #2d2e31;
   --gray-800: #131415;
   --gray-900: #050505;
   --primary300: #9782ff;
@@ -34,7 +34,7 @@
   --bg: var(--gray-900);
   --offWhite: var(--gray-50);
   --placeholder: var(--gray-600);
-  --line: var(--gray-800);
+  --line: var(--gray-700);
   --deemphasised: var(--gray-500);
   --txt: var(--gray-200);
   --light-bg: var(--gray-800);
