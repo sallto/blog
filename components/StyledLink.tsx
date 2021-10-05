@@ -2,9 +2,16 @@ import Link from "next/link";
 import React from "react";
 import AnimatedArrow from "./AnimatedArrow";
 
-export const ArrowLessLink = ({ children, href }: StyledLinkProps) => (
+export const ArrowLessLink = ({
+  children,
+  href,
+  ...props
+}: StyledLinkProps) => (
   <Link href={href} passHref>
-    <a className="text-primary-300 font-medium group transition-colors duration-300 hover:text-primary-200">
+    <a
+      {...props}
+      className="text-primary-300 font-medium group transition-colors duration-300 hover:text-primary-200"
+    >
       {children}
     </a>
   </Link>
