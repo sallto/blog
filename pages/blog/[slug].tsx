@@ -14,6 +14,7 @@ import TableOfContents from "../../components/TableOfContents";
 import { convertDateToHumanFormat } from "../../util/date";
 import Pre from "../../components/Pre";
 import Navbar from "../../components/Navbar";
+import StyledLink, { ArrowLessLink } from "../../components/StyledLink";
 
 const BlogPost: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   post,
@@ -48,7 +49,7 @@ const BlogPost: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </h1>
         </header>
         <main className="prose-lg col-start-2 row-start-2 text-secondary-txt max-w-prose ">
-          <Component components={{ pre: Pre }} />
+          <Component components={{ pre: Pre, a: ArrowLessLink }} />
         </main>
       </div>
     </div>
