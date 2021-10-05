@@ -2,15 +2,20 @@ import Link from "next/link";
 import React from "react";
 import AnimatedArrow from "./AnimatedArrow";
 
-const StyledLink = ({ children, href }: StyledLinkProps) => (
+export const ArrowLessLink = ({ children, href }: StyledLinkProps) => (
   <Link href={href} passHref>
-    <a className="text-primary-300 text-base font-medium group">
-      {children} <AnimatedArrow />
+    <a className="text-primary-300 font-medium group transition-colors duration-300 hover:text-primary-200">
+      {children}
     </a>
   </Link>
 );
+const StyledLink = ({ children, href }: StyledLinkProps) => (
+  <ArrowLessLink href={href}>
+    {children} <AnimatedArrow />
+  </ArrowLessLink>
+);
 type StyledLinkProps = {
-  children: React.ReactText;
+  children: React.ReactNode;
   href: string;
 };
 export default StyledLink;
