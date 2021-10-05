@@ -5,7 +5,7 @@ import { Heading } from "./types/TOCHeading";
 
 export default function remarkTocHeadings(options: OptionProps) {
   return (tree: any) =>
-    visit(tree, "heading", (node, index, parent) => {
+    visit(tree, "heading", (node) => {
       const textContent = toString(node);
 
       const newHeading: Heading = {
