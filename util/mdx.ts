@@ -71,7 +71,6 @@ export async function getFileBySlug(slug: string) {
 import matter from "gray-matter";
 import { Heading } from "./types/TOCHeading";
 import { Post, PartialPost } from "./types/Post";
-import remarkCodeTitle from "./remarkCodeTitle";
 import { motion } from "framer-motion";
 export async function getAllFrontMatter() {
   const contentPath = path.join(root, "_content", "posts");

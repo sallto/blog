@@ -10,10 +10,11 @@ const showHideVariants = {
   },
 };
 const Pre: FunctionComponent = ({ children }) => {
-  const textInput = useRef(null);
+  const textInput = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const onCopy = () => {
     setCopied(true);
+    if(textInput.current&&textInput.current.textContent)
     navigator.clipboard.writeText(textInput.current.textContent);
     setTimeout(() => {
       setCopied(false);

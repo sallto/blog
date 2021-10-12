@@ -1,11 +1,5 @@
-import {
-  GetStaticPathsContext,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from "next";
+import { GetStaticPathsContext, InferGetStaticPropsType, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { Head } from "next/document";
 import LineLink from "../../components/LineLink";
 import Navbar from "../../components/Navbar";
 import PostCard from "../../components/PostCard";

@@ -1,11 +1,12 @@
+/* eslint-disable */
 import React, { useState, useEffect, useRef, MutableRefObject } from "react";
 
 export default function BasicIODemo() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
   let isIntersecting = false;
-  if (ref) {
-    isIntersecting = useOnScreen(ref);
-  }
+
+  isIntersecting = useOnScreen(ref);
+
   const variants = {
     visible: {
       opacity: 1,
@@ -49,7 +50,7 @@ export default function BasicIODemo() {
 }
 
 // Hook
-function useOnScreen(ref: MutableRefObject<HTMLDivElement | null>) {
+function useOnScreen(ref) {
   // State and setter for storing whether element is visible
   const [isIntersecting, setIntersecting] = useState(false);
 
