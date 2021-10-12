@@ -9,3 +9,8 @@ This is my personal blog I am currently in the process of building. (I also plan
 - preact to reduce initial load bundle size
 - framer-motion for animations
 
+## Leasons learned
+
+- Content before styling. By the time I had the site nicely looking, I was a bit burnt-out since I long wanted to write actual content.
+- Maybe use a template next time. There are some excellent nextjs based templates, but they are relatively difficult to find.
+- Typescript is a lifesaver, but sometimes it is just not possible (remark plugins are basically impossible to write typed)
