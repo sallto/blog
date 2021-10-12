@@ -7,7 +7,7 @@ import {
 } from "next";
 import { getAllFrontMatter, getFileBySlug } from "../../util/mdx";
 import { getMDXComponent } from "mdx-bundler/client";
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, ReactNode, useRef, useState } from "react";
 import { Heading } from "../../util/types/TOCHeading";
 import Link from "next/link";
 import TableOfContents from "../../components/TableOfContents";
@@ -15,22 +15,31 @@ import { convertDateToHumanFormat } from "../../util/date";
 import Pre from "../../components/Pre";
 import Navbar from "../../components/Navbar";
 import StyledLink, { ArrowLessLink } from "../../components/StyledLink";
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
+import Footer from "../../components/Footer";
+import { NextSeo } from "next-seo";
 
 const BlogPost: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   post,
 }) => {
   const Component = React.useMemo(
-    () => getMDXComponent(post.code, {}),
+    () =>
+      getMDXComponent(post.code, {
+        motion: motion,
+        AnimateSharedLayout: AnimateSharedLayout,
+        AnimatePresence: AnimatePresence,
+      }),
     [post.code]
   );
   return (
     <div>
+      <NextSeo title={post.title} description={post.desc} />
       <Navbar />
       <div
-        className="grid grid-flow-col"
+        className="grid grid-flow-col gap-2"
         style={{
           gridTemplateColumns:
-            "minmax(1.2rem, 1fr) minmax(auto, 65ch)  minmax(1.2rem, 1fr)",
+            "minmax(1.2rem, 1fr) minmax(auto, 75ch)  minmax(1.2rem, 1fr)",
           gridTemplateRows: "min-content 1fr",
         }}
       >
@@ -52,6 +61,7 @@ const BlogPost: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <Component components={{ pre: Pre, a: ArrowLessLink }} />
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

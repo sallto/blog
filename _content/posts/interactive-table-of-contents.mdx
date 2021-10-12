@@ -36,7 +36,7 @@ With the `id` attributes added, it is now possible to jump to the corresponding 
 
 The only thing left now is to extract the headings to a usable format.
 
-### The power of remark plugins
+## The power of remark plugins
 
 We have discovered the power of remark plugins by now so how about builidng one ourselves to solve this issue.
 
@@ -159,3 +159,210 @@ function TableOfContents({ headings }) {
 
 If we want interactivity it gets a bit more complicated.
 As you probobly noticed by now, the currently active heading is always highlighted on this page.
+
+The currently highlighted heading should always be:
+
+- The the first headline currently visible
+- The next heading above the viewport
+
+One way to achieve this is by checking the position of all headings on every scroll. But this is **very** inefficient and requires tricks such as debouncing.
+
+## The lifechanging magic of IntersectionObservers
+
+The more elegant way is to use `IntersectionObserver`s. IntersectionObservers are made to detect whether a Element is on screen and are way more efficient.
+
+import BasicIODemo from "./articles/interactive-table-of-contents/basic-IO.tsx";
+
+<BasicIODemo />
+
+Here the `IntersectionObserver` is attached to the div with the Purple background.
+The basic API for `IntersectionObservers` is by using a callback.
+
+```js
+const observer = new IntersectionObserver(([entry]) => {
+  console.log("Event!");
+};
+```
+
+This callback will be called whenever the observed Element leaves **or** enters the screen.
+
+We can now attach the Observer to a `HTMLElement`.
+
+```js
+observer.observe(document.querySelector("h1"));
+```
+
+As opposed to real-life detectives, IntersectionObserver can observe multiple elements at the same time.
+Since there are multiple elements, the callback will have a list of all entries as parameter.
+
+To check if an Element has entered or left the screen, we can use `entry.isIntersecting` which is `true` whenever the Element is present on the screen.
+
+At the end of the lifecycle we want to unmount all observers using `observer.disconnect()`.
+
+Since we don't want to reconnect the observer on every Rerender, the whole Observer part of your code should be inside a `useEffect` block.
+
+```jsx
+const element = document.querySelector("#introduction");
+useEffect(() => {
+  const observer = new IntersectionObserver(([entry]) => {
+    // Update our state when observer callback fires
+  });
+
+  observer.observe(element);
+
+  return () => {
+    observer.disconnect();
+  };
+}, []);
+// Empty array ensures that effect is only run on
+// mount and unmount
+```
+
+This neatly takes care of all unmounting problems.
+Now we have all building blocks in place to build our awesome TOC.
+
+## Adding the magic
+
+At first lets focus on observing all elements, before building the actual functionality.
+Since the headings are not part of Reacts VirtualDOM, we will use their `id` attributes to identify them.
+
+```jsx
+function TableOfContents({ headings }) {
+  useEffect(() => {
+    const observer = new IntersectionObserver((e) => {
+      // Update our state when observer callback fires
+    });
+
+    headings
+      .map((heading) => heading.url)
+      .map((id)=>document.querySelector(id))
+      .forEach((heading) => observer.observe(heading));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [headings]);
+
+  return (
+    ...
+  );
+}
+```
+
+Since our Effect depends on the list of headings, this variable has to be added to `useEffect`'s dependency array.
+Now our observer will reattach whenever the headings change (this really shouldn't happen).
+
+First of we need a bit of state to keep track of which heading is currently active.
+
+```jsx
+function TableOfContents({ headings }) {
+const [activeId, setActiveId] = useState("");
+...
+}
+```
+
+Now lets tackle the Callback.
+As long as there is a heading visible we want to:
+
+<ol className="list-inside list-decimal ">
+  <li>Find all visible headings</li>
+  <li>Get the topmost visible heading.</li>
+</ol>
+
+Since we have access to all entries in the callback, let's filter only the ones, that are intersecting.
+
+```js
+const callback = (entries) => {
+  const visibleHeadings = entries.filter((e) => e.isIntersecting);
+};
+```
+
+The important thing is now that we traversed the mdx syntax tree in order. We then added the headings to the observer in order.
+As such the list of entries has to be in order. The first element of the list is the topmost heading.
+
+To get the `HTMLElement` we will use the `target` attribute, which is basically like the `current` attribute of `Ref`.
+
+```js
+const callback = (entries) => {
+  const visibleHeadings = entries.filter((e) => e.isIntersecting);
+
+  //visibleHeadings can easily be empty.
+  if (visibleHeadings.length > 0) {
+    setActiveId(`#${visibleHeadings[0].target.id}`);
+  }
+};
+```
+
+Now in theory this should work perfectly. But for some reason, if there are multiple elements intersecting at the same time, some exit events are missed.
+This leads to headings being skipped randomly. (Someone please explain)
+
+To combat this we can search for the bottommost heading above the viewport, whenever there are no headings visible (the last exit is always triggered as far as I can tell).
+Luckily the `IntersectionObserverEntry` has `boundingClientRect` as an attribute.
+
+In particular the `bottom` attribute of `boundingClientRect` describes the vertical positioning relative to the viewport.
+If the element is visible, `bottom` is greater than `0`. To find the first heading above the viewport we simple iterate backwords until we find an entry with `bottom < 0`.
+
+```js {8-13}
+const callback = (entries) => {
+  const visibleHeadings = entries.filter((e) => e.isIntersecting);
+
+  if (visibleHeadings.length > 0) {
+    setActiveId(`#${visibleHeadings[0].target.id}`);
+  } else {
+    const element = headingEntries
+      .reverse()
+      .find((e) => e.boundingClientRect.bottom < 0);
+    if (element) {
+      setActiveId(`#${element.target.id}`);
+    }
+  }
+};
+```
+
+Now the `activeId` will always be correct, and the particular TOCEntry can be highlighted by matching its `id`.
+
+```jsx
+function TableOfContents({ headings }) {
+  const [activeId, setActiveId] = useState("");
+
+  useEffect(() => {
+    const callback = (entries) => {
+      const visibleHeadings = entries.filter((e) => e.isIntersecting);
+      if (visibleHeadings.length > 0) {
+        setActiveId(`#${visibleHeadings[0].target.id}`);
+      } else {
+        const element = headingEntries
+          .reverse()
+          .find((e) => e.boundingClientRect.bottom < 0);
+        if (element) {
+          setActiveId(`#${element.target.id}`);
+        }
+      }
+    };
+
+    headings
+      .map((heading) => heading.url)
+      .map((id) => document.querySelector(id))
+      .forEach((heading) => observer.observe(heading));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [headings]);
+
+  return (
+    <ul>
+      {headings.map((heading) => (
+        <li>
+          <a
+            className={heading.url === activeId ? "active" : ""}
+            href={heading.url}
+          >
+            {heading.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```

@@ -11,13 +11,12 @@ export default function TableOfContents({ headings }: TOCProps) {
       value: "Introduction",
     },
   ].concat(headings);
-  const [activeId, setActiveId] = useState("");
-  useActiveHeading(
+  
+  const activeId=useActiveHeading(
     realHeadings.map((h) => h.url),
-    setActiveId
   );
   return (
-    <ul className="ml-16 sticky top-36 text-secondary-placeholder text-lg space-y-2">
+    <ul className="ml-4 sticky top-36 text-secondary-placeholder text-lg space-y-2">
       {realHeadings.map((heading) => (
         <TOCEntry
           key={heading.value}

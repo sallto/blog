@@ -56,6 +56,10 @@ export async function getFileBySlug(slug: string) {
       options.minify = true;
       return options;
     },
+    globals: {
+      motion: "motion",
+      AnimateSharedLayout: "AnimateSharedLayout",
+    },
   });
   return {
     toc,
@@ -68,6 +72,7 @@ import matter from "gray-matter";
 import { Heading } from "./types/TOCHeading";
 import { Post, PartialPost } from "./types/Post";
 import remarkCodeTitle from "./remarkCodeTitle";
+import { motion } from "framer-motion";
 export async function getAllFrontMatter() {
   const contentPath = path.join(root, "_content", "posts");
   const files = fs.readdirSync(contentPath);
